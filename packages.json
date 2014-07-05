@@ -1,0 +1,11 @@
+{
+    "package": {
+        "name": "comodojo/dispatcher.plugin.performance",
+        "version": "1.0.0",
+        "source": {
+          "url": "/home/marco/Workspace/comodojo/dispatcher.plugin.performance/.git",
+          "type": "git",
+          "reference": "master"
+        }
+    }
+}
