@@ -1,5 +1,5 @@
 {
-    "name": "comodojo/dispatcher.plugin.performance",
+    "name": "comodojo/dispatcher.plugin.performer",
     "description": "Service performance plugin for comodojo/dispatcher.framework",
     "type": "dispatcher-plugin",
     "authors": [
@@ -9,6 +9,6 @@
         }
     ],
     "extra": {
-        "comodojo-plugin-load": "performance"
+        "comodojo-plugin-load": "performer"
     }   
 }

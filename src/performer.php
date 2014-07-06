@@ -27,7 +27,7 @@ global $dispatcher;
 
 define("DISPATCHER_PERFORM_EVERYTHING", true);
 
-class performance {
+class performer {
 
 	private $time_init = NULL;
 
@@ -43,11 +43,15 @@ class performance {
 
 		$this->time_init = $time;
 
+		\comodojo\Dispatcher\debug("Performer online, current time: ".$this->time_init,"INFO","performer");
+
 	}
 
 	public function request_performance($ObjectRequest) {
 
 		$this->time_request = microtime(true);
+
+		\comodojo\Dispatcher\debug("Request modelling time acquired: ".$this->time_request,"INFO","performer");
 
 	}
 
@@ -59,6 +63,13 @@ class performance {
 
 			$this->time_serviceroute = microtime(true);
 
+			\comodojo\Dispatcher\debug("Serviceroute tracing time acquired: ".$this->time_serviceroute,"INFO","performer");
+
+		}
+		else {
+
+			\comodojo\Dispatcher\debug("Performance tracing disabled, shutting time performer.","INFO","performer");
+
 		}
 
 	}
@@ -69,6 +80,8 @@ class performance {
 
 			$this->time_result = microtime(true);
 
+			\comodojo\Dispatcher\debug("Result elaboration time acquired: ".$this->time_result,"INFO","performer");
+
 			return $this->inject_headers($ObjectResult);
 
 		}
@@ -76,6 +89,8 @@ class performance {
 	}
 
 	private function inject_headers($ObjectResult) {
+
+		\comodojo\Dispatcher\debug("Injecting headers...","INFO","performer");
 
 		$ObjectResult->setHeader("D-Request-sec", $this->time_request - $this->time_init );
 
@@ -91,7 +106,7 @@ class performance {
 
 }
 
-$p = new performance($dispatcher->getCurrentTime());
+$p = new performer($dispatcher->getCurrentTime());
 
 $dispatcher->addHook("dispatcher.request.#", $p, "request_performance");
 
