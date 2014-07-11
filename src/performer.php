@@ -25,7 +25,7 @@
 
 global $dispatcher;
 
-define("DISPATCHER_PERFORM_EVERYTHING", true);
+define("DISPATCHER_PERFORM_EVERYTHING", false);
 
 class performer {
 
