@@ -1,10 +1,23 @@
 {
     "name": "comodojo/dispatcher.plugin.performer",
     "description": "Service performance plugin for comodojo/dispatcher.framework",
+    "license": "GPL-3.0+",
     "type": "dispatcher-plugin",
+    "keywords": [
+        "comodojo",
+        "dispatcher",
+        "http",
+        "performance",
+        "performer",
+        "service"
+    ],
+    "homepage": "http://dispatcher.comodojo.org",
+     "support": {
+        "issues": "https://github.com/comodojo/dispatcher.plugin.performer/issues"
+    },
     "authors": [
         {
-            "name": "comodojo",
+            "name": "Marco Giovinazzi",
             "email": "info@comodojo.org"
         }
     ],
