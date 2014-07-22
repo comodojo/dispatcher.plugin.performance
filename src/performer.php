@@ -1,11 +1,11 @@
-<?php namespace comodojo\DispatcherPlugin;
+<?php namespace Comodojo\DispatcherPlugin;
 
 /**
  * Service performance plugin for comodojo/dispatcher.framework
  * 
- * @package 	Comodojo dispatcher (Spare Parts)
- * @author		comodojo <info@comodojo.org>
- * @license 	GPL-3.0+
+ * @package     Comodojo dispatcher (Spare Parts)
+ * @author      comodojo <info@comodojo.org>
+ * @license     GPL-3.0+
  *
  * LICENSE:
  * 
@@ -25,93 +25,99 @@
 
 global $dispatcher;
 
-define("DISPATCHER_PERFORM_EVERYTHING", false);
-
 class performer {
 
-	private $time_init = NULL;
+    private $time_init = null;
 
-	private $time_request = NULL;
+    private $time_request = null;
 
-	private $time_serviceroute = NULL;
+    private $time_serviceroute = null;
 
-	private $time_result = NULL;
+    private $time_result = null;
 
-	private $should_perform = false;
+    private $should_perform = false;
 
-	public function __construct($time) {
+    private $should_perform_everything = false;
 
-		$this->time_init = $time;
+    private $logger = false;
 
-		\comodojo\Dispatcher\debug("Performer online, current time: ".$this->time_init,"INFO","performer");
+    public function __construct($time) {
 
-	}
+        $this->logger = $dispatcherInstance->getLogger();
 
-	public function request_performance($ObjectRequest) {
+        $this->time_init = $dispatcherInstance->getCurrentTime();
 
-		$this->time_request = microtime(true);
+        $this->should_trace_everything = defined('DISPATCHER_PERFORM_EVERYTHING') ? filter_var(DISPATCHER_PERFORM_EVERYTHING, FILTER_VALIDATE_BOOLEAN) ? false;
 
-		\comodojo\Dispatcher\debug("Request modelling time acquired: ".$this->time_request,"INFO","performer");
+        $this->logger->info('Performer online');
 
-	}
+        $this->logger->debug('Init time acquired'.array( 'INIT_TIME' => $this->time_init));
 
-	public function serviceroute_performance($ObjectRoute) {
+    }
 
-		if ( $ObjectRoute->getParameter("perform") || DISPATCHER_PERFORM_EVERYTHING ) {
+    public function requestPerformance($ObjectRequest) {
 
-			$this->should_perform = true;
+        $this->time_request = microtime(true);
 
-			$this->time_serviceroute = microtime(true);
+        $this->logger->debug('Request modelling time acquired'.array( 'REQUEST_TIME' => $this->time_request));
 
-			\comodojo\Dispatcher\debug("Serviceroute tracing time acquired: ".$this->time_serviceroute,"INFO","performer");
+    }
 
-		}
-		else {
+    public function serviceroutePerformance($ObjectRoute) {
 
-			\comodojo\Dispatcher\debug("Performance tracing disabled, shutting time performer.","INFO","performer");
+        if ( $ObjectRoute->getParameter("perform") || $this->should_trace_everything ) {
 
-		}
+            $this->should_perform = true;
 
-	}
+            $this->time_serviceroute = microtime(true);
 
-	public function result_performance($ObjectResult) {
+            $this->logger->debug('Route querying time acquired'.array( 'ROUTE_TIME' => $this->time_serviceroute));
 
-		if ( $this->should_perform ) {
+        }
+        else {
 
-			$this->time_result = microtime(true);
+            $this->logger->info('Performance tracing disabled, shutting down performer');
 
-			\comodojo\Dispatcher\debug("Result elaboration time acquired: ".$this->time_result,"INFO","performer");
+        }
 
-			return $this->inject_headers($ObjectResult);
+    }
 
-		}
+    public function resultPerformance($ObjectResult) {
 
-	}
+        if ( $this->should_perform ) {
 
-	private function inject_headers($ObjectResult) {
+            $this->time_result = microtime(true);
 
-		\comodojo\Dispatcher\debug("Injecting headers...","INFO","performer");
+            $this->logger->debug('Result elaboration time acquired'.array( 'RESULT_TIME' => $this->time_result));
 
-		$ObjectResult->setHeader("D-Request-sec", $this->time_request - $this->time_init );
+            return $this->injectHeaders($ObjectResult);
 
-		$ObjectResult->setHeader("D-Route-sec", $this->time_serviceroute - $this->time_request );
+        }
 
-		$ObjectResult->setHeader("D-Result-sec", $this->time_result - $this->time_serviceroute );
+    }
 
-		$ObjectResult->setHeader("D-Total-sec", $this->time_result - $this->time_init );
+    private function injectHeaders($ObjectResult) {
 
-		return $ObjectResult;
+        $this->logger->info('Injecting headers to result');
 
-	}
+        $ObjectResult->setHeader("D-Request-sec", $this->time_request - $this->time_init );
+
+        $ObjectResult->setHeader("D-Route-sec", $this->time_serviceroute - $this->time_request );
+
+        $ObjectResult->setHeader("D-Result-sec", $this->time_result - $this->time_serviceroute );
+
+        $ObjectResult->setHeader("D-Total-sec", $this->time_result - $this->time_init );
+
+        return $ObjectResult;
+
+    }
 
 }
 
-$p = new performer($dispatcher->getCurrentTime());
+$p = new Performer($dispatcher);
 
-$dispatcher->addHook("dispatcher.request.#", $p, "request_performance");
+$dispatcher->addHook("dispatcher.request.#", $p, "requestPerformance");
 
-$dispatcher->addHook("dispatcher.serviceroute.#", $p, "serviceroute_performance");
+$dispatcher->addHook("dispatcher.serviceroute.#", $p, "serviceroutePerformance");
 
-$dispatcher->addHook("dispatcher.result.#", $p, "result_performance");
-
-?>
+$dispatcher->addHook("dispatcher.result.#", $p, "resultPerformance");
