@@ -41,17 +41,17 @@ class performer {
 
     private $logger = false;
 
-    public function __construct($time) {
+    public function __construct($dispatcherInstance) {
 
         $this->logger = $dispatcherInstance->getLogger();
 
         $this->time_init = $dispatcherInstance->getCurrentTime();
 
-        $this->should_trace_everything = defined('DISPATCHER_PERFORM_EVERYTHING') ? filter_var(DISPATCHER_PERFORM_EVERYTHING, FILTER_VALIDATE_BOOLEAN) ? false;
+        $this->should_trace_everything = defined('DISPATCHER_PERFORM_EVERYTHING') ? filter_var(DISPATCHER_PERFORM_EVERYTHING, FILTER_VALIDATE_BOOLEAN) : false;
 
         $this->logger->info('Performer online');
 
-        $this->logger->debug('Init time acquired'.array( 'INIT_TIME' => $this->time_init));
+        $this->logger->debug('Init time acquired', array( 'INIT_TIME' => $this->time_init));
 
     }
 
@@ -59,7 +59,7 @@ class performer {
 
         $this->time_request = microtime(true);
 
-        $this->logger->debug('Request modelling time acquired'.array( 'REQUEST_TIME' => $this->time_request));
+        $this->logger->debug('Request modelling time acquired', array( 'REQUEST_TIME' => $this->time_request));
 
     }
 
@@ -71,7 +71,7 @@ class performer {
 
             $this->time_serviceroute = microtime(true);
 
-            $this->logger->debug('Route querying time acquired'.array( 'ROUTE_TIME' => $this->time_serviceroute));
+            $this->logger->debug('Route querying time acquired', array( 'ROUTE_TIME' => $this->time_serviceroute));
 
         }
         else {
@@ -88,7 +88,7 @@ class performer {
 
             $this->time_result = microtime(true);
 
-            $this->logger->debug('Result elaboration time acquired'.array( 'RESULT_TIME' => $this->time_result));
+            $this->logger->debug('Result elaboration time acquired', array( 'RESULT_TIME' => $this->time_result));
 
             return $this->injectHeaders($ObjectResult);
 
