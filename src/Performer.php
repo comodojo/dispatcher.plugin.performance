@@ -100,13 +100,13 @@ class performer {
 
         $this->logger->info('Injecting headers to result');
 
-        $ObjectResult->setHeader("D-Request-sec", $this->time_request - $this->time_init );
+        $ObjectResult->setHeader("D-Request-Sec", $this->time_request - $this->time_init );
 
-        $ObjectResult->setHeader("D-Route-sec", $this->time_serviceroute - $this->time_request );
+        $ObjectResult->setHeader("D-Route-Sec", $this->time_serviceroute - $this->time_request );
 
-        $ObjectResult->setHeader("D-Result-sec", $this->time_result - $this->time_serviceroute );
+        $ObjectResult->setHeader("D-Result-Sec", $this->time_result - $this->time_serviceroute );
 
-        $ObjectResult->setHeader("D-Total-sec", $this->time_result - $this->time_init );
+        $ObjectResult->setHeader("D-Total-Sec", $this->time_result - $this->time_init );
 
         return $ObjectResult;
 
