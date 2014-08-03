@@ -25,7 +25,7 @@
 
 global $dispatcher;
 
-class performer {
+class Performer {
 
     private $time_init = null;
 
