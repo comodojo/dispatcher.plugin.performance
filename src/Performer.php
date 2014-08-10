@@ -3,7 +3,7 @@
 /**
  * Service performance plugin for comodojo/dispatcher.framework
  * 
- * @package     Comodojo dispatcher (Spare Parts)
+ * @package     Comodojo dispatcher
  * @author      comodojo <info@comodojo.org>
  * @license     GPL-3.0+
  *
