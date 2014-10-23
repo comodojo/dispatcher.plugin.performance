@@ -26,7 +26,7 @@ To enable performer in a single service, add `'perform' => true` into service pa
 
 	$dispatcher->setRoute( "test_performance", "ROUTE", "performed.php", array ( 'perform' => true ) );
 
-	```
+```
 
 To enable performer for all services, add `DISPATCHER_PERFORM_EVERYTHING` constant into dispatcher-config.php file:
 
@@ -34,7 +34,7 @@ To enable performer for all services, add `DISPATCHER_PERFORM_EVERYTHING` consta
 
 	define('DISPATCHER_PERFORM_EVERYTHING', true);
 
-	```
+```
 
 ## Demo
 
