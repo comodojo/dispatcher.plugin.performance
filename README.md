@@ -16,17 +16,25 @@ Values are calculated in microseconds.
 
 Just require lib in a dispatcher.project installation (current version: 1.0.0):
 
-	``composer require comodojo/dispatcher.plugin.performer 1.0.*``
+	composer require comodojo/dispatcher.plugin.performer 1.0.*
 
 ## Usage
 
 To enable performer in a single service, add `'perform' => true` into service parameters (routing-config.php), like:
 
-	``$dispatcher->setRoute( "test_performance", "ROUTE", "performed.php", array ( 'perform' => true ) );``
+```php
+
+	$dispatcher->setRoute( "test_performance", "ROUTE", "performed.php", array ( 'perform' => true ) );
+
+	```
 
 To enable performer for all services, add `DISPATCHER_PERFORM_EVERYTHING` constant into dispatcher-config.php file:
 
-	``define('DISPATCHER_PERFORM_EVERYTHING', true);``
+```php
+
+	define('DISPATCHER_PERFORM_EVERYTHING', true);
+
+	```
 
 ## Demo
 
